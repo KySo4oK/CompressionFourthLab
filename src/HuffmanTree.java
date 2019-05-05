@@ -112,6 +112,7 @@ public class HuffmanTree {
         inOrder(root.right);
     }
 
+
     private void preOrder(ListElement root) {
         if (root == null) {
             return;
