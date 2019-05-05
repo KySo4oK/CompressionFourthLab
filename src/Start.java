@@ -14,7 +14,7 @@ public class Start {
                     ListElement temp = new ListElement(1, text.charAt(i));
                     allChar.add(temp);
                 } else {
-                    findAndSetFrequncy(text.charAt(i));
+                    findAndSetFrequency(text.charAt(i));
                 }
             }
         }
@@ -45,7 +45,7 @@ public class Start {
         return false;
     }
 
-    public static void findAndSetFrequncy(char ch) {
+    public static void findAndSetFrequency(char ch) {
         for(int i = 0; i < allChar.size(); i++){
             if(allChar.get(i).data == ch) {
                 newFrequency(allChar.get(i));
