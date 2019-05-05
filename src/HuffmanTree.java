@@ -84,6 +84,12 @@ public class HuffmanTree {
         }
     }
 
+    void printTableToFile(String nameOfOutputFile){
+        for(int i = 0; i < allLetters.size(); i++) {
+            System.out.println(allLetters.get(i).data + " "  + code(allLetters.get(i)));
+        }
+    }
+
     private void postOrder(ListElement root) {
         if (root == null) {
             return;
