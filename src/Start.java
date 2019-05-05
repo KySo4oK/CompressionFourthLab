@@ -28,6 +28,7 @@ public class Start {
         tree.printDetours();
 
 
+
         System.out.println("Weight : " + tree.compWeight());
         System.out.println("Height : " + tree.compHeight());
         System.out.println("Middle Height : " + tree.compMiddleHeight());
