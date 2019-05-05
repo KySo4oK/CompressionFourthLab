@@ -33,6 +33,15 @@ public class HuffmanTree {
            return g;
     }
 
+    String codeOfChar (char ch) {
+        for(int i = 0 ; i < allLetters.size(); i++){
+            if(allLetters.get(i).data == ch){
+                return code(allLetters.get(i));
+            }
+        }
+        return null;
+    }
+
     String invertCode (ListElement a) {
         if (a != root) {
             if(a.parent.left == a) {
