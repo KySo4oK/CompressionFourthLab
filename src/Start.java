@@ -12,6 +12,7 @@ public class Start {
 //        String text = scan.nextLine();
 //       Compression compression = new Compression(text);
        Compression compression1 = new Compression(nameOfInputFile, 1);
+       compression1.compress(nameOfOutputFile);
     }
 
 }

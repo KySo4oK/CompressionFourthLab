@@ -1,3 +1,7 @@
+import java.io.DataOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -84,10 +88,18 @@ public class HuffmanTree {
         }
     }
 
-    void printTableToFile(String nameOfOutputFile){
-        for(int i = 0; i < allLetters.size(); i++) {
-            System.out.println(allLetters.get(i).data + " "  + code(allLetters.get(i)));
-        }
+    void printTableToFile(String nameOfOutputFile) {
+        try(DataOutputStream dataOut = new DataOutputStream(new FileOutputStream(nameOfOutputFile))) {
+            for (int i = 0; i < allLetters.size(); i++) {
+                dataOut.write(allLetters.get(i).data);
+                String temp = code(allLetters.get(i));
+                for(int j = 0; j < temp.length(); j++){
+                    dataOut.write(temp.charAt(i));
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        } catch (Exception e) {}
     }
 
     private void postOrder(ListElement root) {
@@ -111,7 +123,6 @@ public class HuffmanTree {
         }
         inOrder(root.right);
     }
-
 
     private void preOrder(ListElement root) {
         if (root == null) {

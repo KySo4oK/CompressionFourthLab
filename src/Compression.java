@@ -1,6 +1,4 @@
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 public class Compression {
@@ -33,8 +31,8 @@ public class Compression {
         }
     }
 
-    Compression(String nameOfInputFile, int n) throws IOException {
-        this.text = readBytes(nameOfInputFile);
+    Compression(String nameOfInputFile, int n) {
+        this.text = readFile(nameOfInputFile);
         if(this.text != null) {
             for (int i = 0; i < text.length(); i++) {
                 if (!isAlreadyReViewed(text.charAt(i))) {
@@ -54,18 +52,16 @@ public class Compression {
         }
     }
 
-    void compress(String nameOfOtputFile) throws IOException{
-        tree.printTableToFile(nameOfOtputFile);
+    void compress(String nameOfOutputFile) throws IOException{
+        tree.printTableToFile(nameOfOutputFile);
     }
 
-    String readBytes(String nameOfInputFile) throws IOException {
-        FileInputStream fin = null;
+    String readFile(String nameOfInputFile){
         String result = "";
         int i = 0;
-        try{
-            fin =new FileInputStream(nameOfInputFile);
+        try(DataInputStream dataIn = new DataInputStream(new FileInputStream(nameOfInputFile)) ){
             while (i != -1){
-                i = fin.read();
+                i = dataIn.read();
                 result += i;
             }
         } catch (FileNotFoundException e) {
