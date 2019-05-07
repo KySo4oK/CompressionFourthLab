@@ -91,11 +91,16 @@ public class HuffmanTree {
     void printTableToFile(String nameOfOutputFile) {
         try(DataOutputStream dataOut = new DataOutputStream(new FileOutputStream(nameOfOutputFile))) {
             for (int i = 0; i < allLetters.size(); i++) {
-                dataOut.write(allLetters.get(i).data);
+               // System.out.print(allLetters.get(i).data + "");
+                dataOut.writeChar(allLetters.get(i).data);
+                dataOut.writeChar('.');
                 String temp = code(allLetters.get(i));
+                //System.out.print(code(allLetters.get(i)) + " ");
+                //System.out.println(temp + "     ");
                 for(int j = 0; j < temp.length(); j++){
-                    dataOut.write(temp.charAt(i));
+                    dataOut.writeChar(temp.charAt(i));
                 }
+                dataOut.writeChar('.');
             }
         } catch (FileNotFoundException e) {
             System.out.println("File not found");

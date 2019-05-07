@@ -6,6 +6,8 @@ public class Compression {
     private List table;
     private HuffmanTree tree;
     public static ArrayList<ListElement> allChar = new ArrayList<>();
+    public String nameOfInputFile;
+    public String nameOfOutputFile;
     Compression(String text){
         this.text = text;
         for(int i = 0; i < text.length() ; i++){
@@ -31,7 +33,9 @@ public class Compression {
         }
     }
 
-    Compression(String nameOfInputFile, int n) {
+    Compression(String nameOfInputFile, String nameOfOutputFile) {
+        this.nameOfInputFile = nameOfInputFile;
+        this.nameOfOutputFile = nameOfOutputFile;
         this.text = readFile(nameOfInputFile);
         if(this.text != null) {
             for (int i = 0; i < text.length(); i++) {
@@ -49,12 +53,22 @@ public class Compression {
             tree = new HuffmanTree(table);
             tree.printTable();
             result();
+            tree.printTableToFile(nameOfInputFile);
         }
     }
 
-    void compress(String nameOfOutputFile) throws IOException{
+    void compress(String nameOfOutputFile){
         tree.printTableToFile(nameOfOutputFile);
     }
+
+    void decompress(String nameOfInputFile){
+        try(DataInputStream dataIn = new DataInputStream(new FileInputStream(nameOfInputFile))){
+
+        } catch (Exception e) {
+            System.out.println("Error input - output");
+        }
+    }
+
 
     String readFile(String nameOfInputFile){
         String result = "";
