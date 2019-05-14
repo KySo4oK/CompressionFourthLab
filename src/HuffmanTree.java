@@ -10,6 +10,11 @@ public class HuffmanTree {
     ArrayList<ListElement> allLetters = new ArrayList<>();
 
 
+
+
+
+
+
     HuffmanTree(List table) {
         while(table.size() >= 0){
             ListElement left = table.pop();
