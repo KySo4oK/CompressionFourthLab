@@ -2,63 +2,22 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class Compression {
-    private String text;
-    private List table;
-    private HuffmanTree tree;
-    public static ArrayList<ListElement> allChar = new ArrayList<>();
-    public String nameOfInputFile;
-    public String nameOfOutputFile;
-    Compression(String text){
-        this.text = text;
-        for(int i = 0; i < text.length() ; i++){
-                if (!isAlreadyReViewed(text.charAt(i))) {
-                    ListElement temp = new ListElement(1, text.charAt(i));
-                    allChar.add(temp);
-                } else {
-                    findAndSetFrequency(text.charAt(i));
+    Compression(){}
+
+    void compressRlE(String nameOfInputFile, String nameOfOutputFile) throws IOException{
+        try(DataInputStream dataInputStream = new DataInputStream(new FileInputStream(nameOfInputFile));
+            DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(nameOfOutputFile))){
+            byte[] allBytes = dataInputStream.readAllBytes();
+            for(int i = 0; i < allBytes.length; ){
+                int start = i;
+                byte current = allBytes[i];
+                while (i < allBytes.length && allBytes[i]==current){
+                    i++;
                 }
-        }
-        table = new List();
-        for(int i = 0; i < allChar.size(); i++){
-            table.push(allChar.get(i));
-        }
-        tree = new HuffmanTree(table);
-        result();
-    }
-
-    public void result(){
-        for (int i = 0; i < text.length(); i++) {
-            System.out.print(tree.codeOfChar(text.charAt(i)));
-            System.out.print(" ");
-        }
-    }
-
-    Compression(String nameOfInputFile, String nameOfOutputFile) {
-        this.nameOfInputFile = nameOfInputFile;
-        this.nameOfOutputFile = nameOfOutputFile;
-        this.text = readFile(nameOfInputFile);
-        if(this.text != null) {
-            for (int i = 0; i < text.length(); i++) {
-                if (!isAlreadyReViewed(text.charAt(i))) {
-                    ListElement temp = new ListElement(1, text.charAt(i));
-                    allChar.add(temp);
-                } else {
-                    findAndSetFrequency(text.charAt(i));
-                }
+                dataOutputStream.write((byte)(i - start));
+                dataOutputStream.write(current);
             }
-            table = new List();
-            for (int i = 0; i < allChar.size(); i++) {
-                table.push(allChar.get(i));
-            }
-            tree = new HuffmanTree(table);
-            tree.printTable();
-            result();
-            tree.printTableToFile(nameOfInputFile);
         }
-    }
-
-    void compress(String nameOfOutputFile){
-        tree.printTableToFile(nameOfOutputFile);
     }
 
     void decompress(String nameOfInputFile){
@@ -86,26 +45,4 @@ public class Compression {
         return result;
     }
 
-
-
-    public  boolean isAlreadyReViewed(char ch) {
-        for(int i = 0; i < allChar.size(); i++){
-            if(allChar.get(i).data == ch){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public  void findAndSetFrequency(char ch) {
-        for(int i = 0; i < allChar.size(); i++){
-            if(allChar.get(i).data == ch) {
-                newFrequency(allChar.get(i));
-            }
-        }
-    }
-
-    public  void newFrequency(ListElement a){
-        a.priority++;
-    }
 }

@@ -7,12 +7,8 @@ public class Start {
     public static String nameOfOutputFile = "of.bmp";
 
     public static void main(String args[]) throws IOException {
-//        Scanner scan = new Scanner(System.in);
-//        System.out.println("input text");
-//        String text = scan.nextLine();
-//       Compression compression = new Compression(text);
-       Compression compression1 = new Compression(nameOfInputFile, nameOfOutputFile);
-       compression1.compress(nameOfOutputFile);
+       Compression compression1 = new Compression();
+       compression1.compressRlE(nameOfInputFile,nameOfOutputFile);
     }
 
 }
