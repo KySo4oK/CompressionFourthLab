@@ -29,8 +29,6 @@ public class Compression {
                         point++;
                     }
                     dataOutputStream.writeInt(point); // length of file in byte
-                    System.out.println(point);
-                    //compressBytes = byteArray(compressBytes, point);
                     for(int i = 0; i<point; i++) {
                         dataOutputStream.write(compressBytes[i]);
                     }
@@ -41,11 +39,15 @@ public class Compression {
     }
 
     void decompressRLE(String nameOfInputFile) throws IOException{
-        try(DataInputStream dataInputStream = new DataInputStream(new FileInputStream(nameOfInputFile))){
-            int quantityOfFile = dataInputStream.readInt(); // read quantity of files
-            System.out.println(quantityOfFile);
-            byte[] allBytes = dataInputStream.readAllBytes();
-            int endOfPreviousFile = 0;
+        int quantityOfFile;
+        byte[] allBytes;
+        try(DataInputStream dataInputStream = new DataInputStream(new FileInputStream(nameOfInputFile))) {
+            quantityOfFile = dataInputStream.readInt(); // read quantity of files
+            allBytes = dataInputStream.readAllBytes();
+
+        }
+        int endOfPreviousFile = 0;
+        try(DataInputStream dataInputStream = new DataInputStream(new FileInputStream(nameOfInputFile))) {
             for(int z = 0; z < quantityOfFile; z++) {
                 int lengthNameOfFile = dataInputStream.readInt(); //length of file name
                 System.out.println(lengthNameOfFile);
@@ -57,7 +59,8 @@ public class Compression {
                 }
                 System.out.println(nameOfDecompress);
                 int lengthOfFile = dataInputStream.readInt();
-                int start = 16 + lengthNameOfFile + endOfPreviousFile;
+                System.out.println(lengthOfFile);
+                int start = 16 + lengthNameOfFile + endOfPreviousFile; // used 16 like 4 int in bytes
                 endOfPreviousFile = start + lengthOfFile;
                 try (DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(nameOfDecompress))) {
                     for (int i = start; i < endOfPreviousFile - 1; i += 2) {
