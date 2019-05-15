@@ -6,21 +6,21 @@ public class Compression {
 
         try (DataOutputStream dataOutputStream =
                         new DataOutputStream(new FileOutputStream(args[0]))){
-            dataOutputStream.writeInt(args.length-1);
+            dataOutputStream.writeInt(args.length-1); //quantity of files
             for(int c = 1; c < args.length ; c++){
                 try (DataInputStream dataInputStream = new DataInputStream(new FileInputStream(args[c]))) {
                     byte[] allBytes = dataInputStream.readAllBytes();
-                    dataOutputStream.write(args[c].length());
+                    dataOutputStream.writeInt(args[c].length()); //length of file name
                     int k;
                     for (k = 0; k < args[c].length(); k++) {
-                        dataOutputStream.write(args[c].charAt(k));
+                        dataOutputStream.writeChar(args[c].charAt(k)); // write name of file in loop
                     }
-                    byte[] compressBytes = new byte[allBytes.length];
+                    byte[] compressBytes = new byte[2*allBytes.length];
                     int point = 0;
                     for (int i = 0; i < allBytes.length; ) {
                         int start = i;
                         byte current = allBytes[i];
-                        while (i < allBytes.length && allBytes[i] == current && i - start < 256) {
+                        while (i < allBytes.length && allBytes[i] == current && i - start < 255) {
                             i++;
                         }
                         compressBytes[point] = (byte)(i - start);
@@ -28,9 +28,12 @@ public class Compression {
                         compressBytes[point] = current;
                         point++;
                     }
-                    dataOutputStream.writeInt(point);
-                    compressBytes = byteArray(compressBytes, point);
-                    dataOutputStream.write(compressBytes);
+                    dataOutputStream.writeInt(point); // length of file in byte
+                    System.out.println(point);
+                    //compressBytes = byteArray(compressBytes, point);
+                    for(int i = 0; i<point; i++) {
+                        dataOutputStream.write(compressBytes[i]);
+                    }
                 }
             }
         }
@@ -39,29 +42,35 @@ public class Compression {
 
     void decompressRLE(String nameOfInputFile) throws IOException{
         try(DataInputStream dataInputStream = new DataInputStream(new FileInputStream(nameOfInputFile))){
-            int quantityOfFile = dataInputStream.readInt();
-            for(int z = 1; z < quantityOfFile; z++) {
-                int lengthNameOfFile = dataInputStream.readInt();
+            int quantityOfFile = dataInputStream.readInt(); // read quantity of files
+            System.out.println(quantityOfFile);
+            byte[] allBytes = dataInputStream.readAllBytes();
+            int endOfPreviousFile = 0;
+            for(int z = 0; z < quantityOfFile; z++) {
+                int lengthNameOfFile = dataInputStream.readInt(); //length of file name
                 System.out.println(lengthNameOfFile);
                 String nameOfDecompress = "";
                 int k;
-                for (k = 1; k <= lengthNameOfFile; k++) {
+                for (k = 1; k <= lengthNameOfFile; k++) { // search file name
                     char ch = dataInputStream.readChar();
                     nameOfDecompress += Character.toString(ch);
                 }
                 System.out.println(nameOfDecompress);
                 int lengthOfFile = dataInputStream.readInt();
+                int start = 16 + lengthNameOfFile + endOfPreviousFile;
+                endOfPreviousFile = start + lengthOfFile;
                 try (DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(nameOfDecompress))) {
-                    for (int i = k; i < lengthOfFile - 1; i += 2) {
-                        int value = dataInputStream.readInt();
+                    for (int i = start; i < endOfPreviousFile - 1; i += 2) {
+                        int value = allBytes[i];
                         for (int j = 0; j < value; j++) {
-                            dataOutputStream.write(dataInputStream.readByte());
+                            dataOutputStream.write(allBytes[i++]);
                         }
                     }
                 }
             }
         }
     }
+
 
     byte[] byteArray(byte[] compress, int point){
         byte[] bytes = new byte[point+1];
